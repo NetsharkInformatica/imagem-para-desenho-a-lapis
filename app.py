@@ -29,10 +29,9 @@ imag_logo=imag_logo.resize((50,50))
 imag_logo= ImageTk.PhotoImage(imag_logo)
 
 
-#####################função para abrir imagem####################################
 
-def abrir_imagem():
-    pass
+
+
 
 #####################função para salvar imagem####################################
 
@@ -57,18 +56,47 @@ app_logo.place(x=0,y=0)
 
 
 
-#rodape
 
-imagem = Image.open("cao.jpg")
-imagem = imagem.resize((250, 250))  # Atribua o resultado do resize de volta à variável
-imagem = ImageTk.PhotoImage(imagem)
+#####################função para abrir imagem####################################
+global imagem_original
 
-app_rodap = Label(janela,
-                 image=imagem,
-                 bg=co1,
-                 fg=co4
-                 )
-app_rodap.place(x=60, y=60)
+imagem_original=[]
+
+label_imagem = Label(janela, bg="#ffffff")
+label_imagem.place(x=100, y=100)  # Posição mais centralizada
+
+def abrir_imagem():
+    global imagem_tk  # Importante manter a referência
+    
+    caminho = fd.askopenfilename(
+        title="Selecione uma imagem",
+        filetypes=(("Arquivos de imagem", "*.png *.jpg *.jpeg"),)
+    )
+    
+    if not caminho:  # Se o usuário cancelar
+        return
+    
+    try:
+        print(f"Arquivo selecionado: {caminho}")  # Debug
+        
+        # Abre e redimensiona a imagem
+        img_pil = Image.open(caminho)
+        print(f"Tamanho original: {img_pil.size}")  # Debug
+        img_pil = img_pil.resize((190, 270))
+        
+        # Converte para formato Tkinter
+        imagem_tk = ImageTk.PhotoImage(img_pil)
+        
+        # Atualiza o Label
+        label_imagem.config(image=imagem_tk)
+        label_imagem.image = imagem_tk  # Mantém a referência!
+        
+        print("Imagem carregada com sucesso!")  # Debug
+    except Exception as e:
+        print(f"Erro ao carregar imagem: {e}")  # Debug
+    
+#----------------------------rodape-----------------------------------------
+
 
 #-----------------------label de configurações----------------------------------
 
@@ -101,7 +129,8 @@ btn_esc=Button(janela,
                font=("Roboto 10 bold"),
                bg=co1,
                overrelief=RIDGE,
-               fg=co4
+               fg=co4,
+               command=abrir_imagem
                )
 btn_esc.place(x=210, y=390)
 
