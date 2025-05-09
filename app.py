@@ -29,6 +29,17 @@ imag_logo=imag_logo.resize((50,50))
 imag_logo= ImageTk.PhotoImage(imag_logo)
 
 
+#####################função para abrir imagem####################################
+
+def abrir_imagem():
+    pass
+
+#####################função para salvar imagem####################################
+
+def salvar_imagem():
+    pass
+
+#-------------------------------label do cabeçlho--------------------------------
 app_logo=Label(janela,
                image=imag_logo,
                text="imagem para desenho a lápis",
@@ -94,17 +105,18 @@ btn_esc=Button(janela,
                )
 btn_esc.place(x=210, y=390)
 
-#botao de conversao
+#botao de conversao----------------------------------------------------
 
-btn_conv=Button(janela,
-               text="converter".upper(),
+btn_salvar=Button(janela,
+               text="Salvar".upper(),
                width=18,
                font=("Roboto 10 bold"),
-               bg=co1,
+               fg="white",
+               bg="green",
                overrelief=RIDGE,
-               fg=co4
+               
                )
-btn_conv.place(x=210, y=425)
+btn_salvar.place(x=210, y=425)
 
 #minha assinatura
 
