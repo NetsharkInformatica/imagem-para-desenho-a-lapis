@@ -1,8 +1,10 @@
 from tkinter import *
+from tkinter import messagebox
 from tkinter import ttk 
 from tkinter import filedialog as fd
 from PIL import ImageTk, Image
 import cv2
+import os
 
 
 #-------------------------------cores ------------------------------------
@@ -33,10 +35,7 @@ imag_logo= ImageTk.PhotoImage(imag_logo)
 
 
 
-#####################função para salvar imagem####################################
 
-def salvar_imagem():
-    pass
 
 #-------------------------------label do cabeçlho--------------------------------
 app_logo=Label(janela,
@@ -95,7 +94,41 @@ def abrir_imagem():
     except Exception as e:
         print(f"Erro ao carregar imagem: {e}")  # Debug
     
-#----------------------------rodape-----------------------------------------
+#####################função para salvar imagem####################################
+
+import numpy as np
+
+def salvar_imagem():
+    global caminho_imagem
+
+    if not caminho_imagem:
+        messagebox.showwarning("Aviso", "Por favor, selecione uma imagem primeiro.")
+        return
+
+    try:
+        img = cv2.imread(caminho_imagem)
+        grey_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        blur = cv2.GaussianBlur(grey_img, (21, 21), 0)
+        sketch = cv2.divide(grey_img, blur, scale=256)
+
+        # Cria pasta se não existir
+        os.makedirs("images", exist_ok=True)
+
+        # Salva imagem convertida
+        caminho_saida = "images/imagem_convertida.png"
+        cv2.imwrite(caminho_saida, sketch)
+
+        # Mostra mensagem de sucesso
+        messagebox.showinfo("Sucesso", f"Imagem salva como:\n{caminho_saida}")
+
+        # Exibe a imagem convertida (opcional)
+        img_convertida = Image.open(caminho_saida).resize((170, 170))
+        img_tk = ImageTk.PhotoImage(img_convertida)
+        label_imagem.config(image=img_tk)
+        label_imagem.image = img_tk
+
+    except Exception as e:
+        messagebox.showerror("Erro", f"Falha ao converter/salvar imagem:\n{e}")
 
 
 #-----------------------label de configurações----------------------------------
@@ -143,6 +176,7 @@ btn_salvar=Button(janela,
                fg="white",
                bg="green",
                overrelief=RIDGE,
+               command=salvar_imagem
                
                )
 btn_salvar.place(x=210, y=425)
